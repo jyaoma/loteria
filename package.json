@@ -1,0 +1,22 @@
+{
+  "name": "loteria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jyaoma/loteria.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jyaoma/loteria/issues"
+  },
+  "homepage": "https://github.com/jyaoma/loteria#readme",
+  "dependencies": {
+    "ably": "^1.2.25"
+  }
+}
