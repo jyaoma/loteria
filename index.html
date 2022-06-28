@@ -8,9 +8,15 @@
     <script src="./js/index.js"></script>
     <script src="./js/cards.js"></script>
     <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/tabla.css" />
+    <link rel="stylesheet" href="./css/drawn.css" />
+    <link rel="stylesheet" href="./css/controls.css" />
   </head>
   <body onload="cool(); beans()">
     <div id="play-area">
+      <div id="drawn">
+        <p>Last drawn card:</p>
+      </div>
       <div id="tabla">
         <div id="tabla-header">
           <div id="tabla-title">LOTERÍA</div>
@@ -21,46 +27,41 @@
         <div class="row row-2"></div>
         <div class="row row-3"></div>
       </div>
-      <div id="drawn">
-        <p>Last drawn card:</p>
+    </div>
+    <div id="controls">
+      <div class="control-group">
+        <div>Menu</div>
+        <input
+          id="win-button"
+          type="button"
+          class="control button"
+          value="Lotería!"
+          disabled
+        />
+        <input
+          id="host-button"
+          type="button"
+          class="control button"
+          value="Claim Host"
+        />
       </div>
-      <div id="controls">
-        <div class="control-group">
-          <div>Menu</div>
-          <input
-            id="win-button"
-            type="button"
-            class="control button"
-            value="Lotería!"
-            disabled
-          />
-          <input
-            id="host-button"
-            type="button"
-            class="control button"
-            value="Claim Host"
-          />
-        </div>
-        <br>
-        <div class="control-group">
-          <div>Host Controls</div>
-          <input
-            id="start-stop-button"
-            type="button"
-            class="control button"
-            value="Start game"
-          />
-          <input
-            id="draw-button"
-            type="button"
-            class="control button"
-            value="Draw next card"
-          />
-        </div>
+      <br />
+      <div class="control-group">
+        <div>Host Controls</div>
+        <input
+          id="start-stop-button"
+          type="button"
+          class="control button"
+          value="Start game"
+        />
+        <input
+          id="draw-button"
+          type="button"
+          class="control button"
+          value="Draw next card"
+        />
       </div>
     </div>
-    <div id="lightbox">
-      
-    </div>
+    <div id="lightbox"></div>
   </body>
 </html>

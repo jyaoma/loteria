@@ -1,0 +1,51 @@
+#tabla {
+  aspect-ratio: 13/20;
+  border-radius: 2px;
+  box-shadow: 2px 3px 10px #888888;
+}
+
+.row {
+  height: 22%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  text-align: center;
+}
+
+.col {
+  aspect-ratio: 5/8;
+  margin-left: 1%;
+  margin-right: 1%;
+  border: 1px solid black;
+}
+
+#tabla-header {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 6%;
+  margin-right: 6%;
+  margin-top: 4%;
+  font-family: serif;
+  font-weight: bold;
+  height: 3%;
+}
+
+@media only screen and (max-width: 800px) {
+  #tabla-header {
+    font-size: 1.5vh;
+  }
+
+  #tabla {
+    max-height: 45vh;
+  }
+}
+
+@media only screen and (min-width: 801px) {
+  #tabla-header {
+    font-size: 2vh;
+  }
+
+  #tabla {
+    max-height: 70vh;
+    padding-bottom: 1%;
+  }
+}
