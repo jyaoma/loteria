@@ -61,14 +61,14 @@
     <div id="lightbox">
       <div id="start-modal">
         <div id="title">Jeremy's Lotería!</div>
-        <div id="start-form">
+        <form id="start-form">
           <label for="name-field">Enter your name:</label>
-          <input type="text" id="name-field">
-          <br>
-          <input type="button" id="join-button" value="Join">
-          <br>
+          <input type="text" id="name-field" required />
+          <br />
+          <input type="submit" id="join-button" value="Join" disabled />
+          <br />
           <div id="start-player-count"></div>
-        </div>
+        </form>
       </div>
     </div>
   </body>

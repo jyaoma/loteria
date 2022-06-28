@@ -7,18 +7,23 @@ const clientChannel = ably.channels.get('client');
 
 // Ably subscriptions
 serverChannel.subscribe('pong', (message) => {
-  const { isHosted, numPlayers } = JSON.parse(message.data);
-  console.log({
-    isHosted,
-    numPlayers,
-  });
+  const { numPlayers } = JSON.parse(message.data);
 
-  document.getElementById('start-player-count').textContent = `${numPlayers === 0 ? 'No' : numPlayers} player${numPlayers === 1 ? '' : 's'} currently in the room`
-  document.getElementById('join-button').value = 'Join as host';
+  document.getElementById('start-player-count').textContent = `${
+    numPlayers === 0 ? 'No' : numPlayers
+  } player${numPlayers === 1 ? '' : 's'} currently in the room`;
+
+  const joinButton = document.getElementById('join-button');
+  joinButton.addEventListener('click', joinGame);
+  joinButton.disabled = false;
 });
 
 // User actions
 const pingServer = () => clientChannel.publish('ping', '');
+
+const joinGame = (e) => {
+  e.preventDefault();
+}
 
 // Game logic
 

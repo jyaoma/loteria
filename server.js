@@ -8,7 +8,7 @@ const clientChannel = ably.channels.get('client');
 
 const players = [];
 const drawn = [];
-let host = null;
+let host = true;
 let isStarted = false;
 
 clientChannel.subscribe('ping', () => {
@@ -41,8 +41,8 @@ clientChannel.subscribe('playerJoin', (playerName) => {
     'getTabla',
     JSON.stringify({
       playerId,
+      isHost: !!host,
       tabla,
-      host,
     })
   );
 });
