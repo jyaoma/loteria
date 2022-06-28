@@ -11,26 +11,24 @@
     <link rel="stylesheet" href="./css/tabla.css" />
     <link rel="stylesheet" href="./css/drawn.css" />
     <link rel="stylesheet" href="./css/controls.css" />
+    <link rel="stylesheet" href="./css/lightbox.css" />
   </head>
   <body onload="cool(); beans()">
     <div id="play-area">
       <div id="drawn">
         <p>Last drawn card:</p>
       </div>
-      <div id="tabla">
-        <div id="tabla-header">
-          <div id="tabla-title">LOTERÍA</div>
-          <div id="tabla-number">TABLA</div>
+      <div id="tabla-container">
+        <div id="tabla">
+          <div id="tabla-header">
+            <div id="tabla-title">LOTERÍA</div>
+            <div id="tabla-number">TABLA</div>
+          </div>
+          <div class="row row-0"></div>
+          <div class="row row-1"></div>
+          <div class="row row-2"></div>
+          <div class="row row-3"></div>
         </div>
-        <div class="row row-0"></div>
-        <div class="row row-1"></div>
-        <div class="row row-2"></div>
-        <div class="row row-3"></div>
-      </div>
-    </div>
-    <div id="controls">
-      <div class="control-group">
-        <div>Menu</div>
         <input
           id="win-button"
           type="button"
@@ -38,14 +36,12 @@
           value="Lotería!"
           disabled
         />
-        <input
-          id="host-button"
-          type="button"
-          class="control button"
-          value="Claim Host"
-        />
       </div>
-      <br />
+      <div id="opponents">
+        <div>Other players</div>
+      </div>
+    </div>
+    <div id="controls">
       <div class="control-group">
         <div>Host Controls</div>
         <input
@@ -62,6 +58,16 @@
         />
       </div>
     </div>
-    <div id="lightbox"></div>
+    <div id="lightbox">
+      <div id="start-modal">
+        <div id="title">Jeremy's Lotería!</div>
+        <div id="start-form">
+          <label for="name-field">Enter your name:</label>
+          <input type="text" id="name-field">
+          <br>
+          <input type="button" value="Join">
+        </div>
+      </div>
+    </div>
   </body>
 </html>

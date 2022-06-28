@@ -1,3 +1,12 @@
+#tabla-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#tabla-container input {
+  margin-top: 1vh;
+}
+
 #tabla {
   aspect-ratio: 13/20;
   border-radius: 2px;
