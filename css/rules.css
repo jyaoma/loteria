@@ -1,0 +1,35 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+#patterns {
+  display: flex;
+  justify-content: center;
+}
+
+p {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+td {
+  border: 1px solid black;
+  width: 25px;
+  height: 40px;
+}
+
+td div {
+  background-color: green;
+  opacity: 0.7;
+  width: 10px;
+  height: 10px;
+  margin-left: 7.5px;
+  border-radius: 10px;
+}
