@@ -1,17 +1,26 @@
-const Ably = require("ably");
+const Ably = require('ably');
 
 const ably = new Ably.Realtime(
-  "ZCvnXg.VfBHog:wc_JJFI4Mymjl7-LPD_zKNNcO4D5s9QfUZ2mcWcuI6w"
+  'ZCvnXg.VfBHog:wc_JJFI4Mymjl7-LPD_zKNNcO4D5s9QfUZ2mcWcuI6w'
 );
-const serverChannel = ably.channels.get("server");
-const clientChannel = ably.channels.get("client");
+const serverChannel = ably.channels.get('server');
+const clientChannel = ably.channels.get('client');
 
 const players = [];
 const drawn = [];
 let host = null;
 let isStarted = false;
 
-clientChannel.subscribe("playerJoin", (playerName) => {
+clientChannel.subscribe('ping', () => {
+  const payload = {
+    isHosted: !!host,
+    numPlayers: players.length,
+  };
+
+  serverChannel.publish('pong', JSON.stringify(payload));
+});
+
+clientChannel.subscribe('playerJoin', (playerName) => {
   players.push({
     id: players.length,
     name: playerName,
@@ -29,7 +38,7 @@ clientChannel.subscribe("playerJoin", (playerName) => {
 
   // send tabla with playerId, who the host is
   serverChannel(
-    "getTabla",
+    'getTabla',
     JSON.stringify({
       playerId,
       tabla,
@@ -38,30 +47,30 @@ clientChannel.subscribe("playerJoin", (playerName) => {
   );
 });
 
-clientChannel.subscribe("host", (playerId) => {
+clientChannel.subscribe('host', (playerId) => {
   if (host === null) host = playerId;
 });
 
-clientChannel.subscribe("start", (playerId) => {
+clientChannel.subscribe('start', (playerId) => {
   if (playerId === host) {
     isStarted = true;
   }
 });
 
-clientChannel.subscribe("reset", (playerId) => {
+clientChannel.subscribe('reset', (playerId) => {
   if (playerId === host) {
     isStarted = false;
     drawn = [];
   }
 });
 
-clientChannel.subscribe("draw", (playerId) => {
+clientChannel.subscribe('draw', (playerId) => {
   if (playerId === host) {
     let currentCard = null;
     do {
       currentCard = Math.floor(Math.random() * 54);
     } while (drawn.includes(currentCard));
 
-    serverChannel.publish("draw", currentCard);
+    serverChannel.publish('draw', currentCard);
   }
 });

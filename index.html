@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="./css/controls.css" />
     <link rel="stylesheet" href="./css/lightbox.css" />
   </head>
-  <body onload="cool(); beans()">
+  <body onload="pingServer(); cool(); beans()">
     <div id="play-area">
       <div id="drawn">
         <p>Last drawn card:</p>
@@ -65,7 +65,9 @@
           <label for="name-field">Enter your name:</label>
           <input type="text" id="name-field">
           <br>
-          <input type="button" value="Join">
+          <input type="button" id="join-button" value="Join">
+          <br>
+          <div id="start-player-count"></div>
         </div>
       </div>
     </div>
