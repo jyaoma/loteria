@@ -2,12 +2,10 @@
   box-shadow: 2px 3px 10px #888888;
 }
 
-
 @media only screen and (min-width: 801px) {
   #drawn {
     display: flex;
     flex-direction: column;
-    width: 20vw;
     justify-content: center;
   }
 
