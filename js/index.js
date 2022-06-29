@@ -15,6 +15,8 @@ let playerId = 0;
 let drawnCard = 0;
 let allDrawnCards = [];
 
+const playerTablas = {};
+
 const myGuid = `${new Date().getTime()}-${Math.floor(Math.random() * 9999)}`;
 
 // Ably subscriptions
@@ -36,6 +38,7 @@ serverChannel.subscribe('getTabla', (message) => {
   const {
     guid,
     playerId: newPlayerId,
+    playerName,
     isHost,
     tabla: newTabla,
   } = JSON.parse(message.data);
@@ -56,6 +59,12 @@ serverChannel.subscribe('getTabla', (message) => {
 
     tabla = newTabla;
     renderTabla();
+  } else {
+    playerTablas[guid] = {
+      name: playerName,
+      tabla: Array(16).fill(false),
+    };
+    renderOtherPlayers();
   }
 });
 
@@ -107,3 +116,19 @@ const renderDrawnCard = () => {
   container.lastChild.remove();
   container.append(card);
 };
+
+const renderOtherPlayers = () => {
+  document.getElementById('opponents-grid').remove();
+  const grid = document.createElement('div');
+  grid.id = 'opponents-grid';
+
+  const guids = Object.keys(playerTablas).sort();
+  guids.forEach(guid => {
+    const {
+      playerName,
+      tabla
+    } = playerTablas[guid];
+  })
+
+  document.getElementById('opponents').append(grid);
+}

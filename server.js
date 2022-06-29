@@ -39,12 +39,13 @@ clientChannel.subscribe('playerJoin', (message) => {
 
   let isHost = false;
   if (!host && host !== 0) {
-    host = playerId;
+    host = guid;
     isHost = true;
   }
 
   const payload = {
     playerId,
+    playerName,
     isHost,
     tabla,
     guid,
