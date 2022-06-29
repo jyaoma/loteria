@@ -10,6 +10,7 @@ const clientChannel = ably.channels.get('client');
 const emptyTabla = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 let tabla = emptyTabla;
+let tablaStatus = Array(16).fill(false);
 let playerId = 0;
 
 let drawnCard = 0;
@@ -76,7 +77,9 @@ serverChannel.subscribe('draw', (message) => {
   const { currentCard, drawn } = JSON.parse(message.data);
 
   drawnCard = currentCard;
+  allDrawnCards = drawn;
   renderDrawnCard();
+  renderOverlays();
 });
 
 // User actions
@@ -107,17 +110,17 @@ const renderTabla = () => {
 
       const column = document.createElement('div');
       column.className = `col col-${col}`;
-      
+
       const card = getCard(tabla[row * 4 + col]);
       card.className = `col col-${col}`;
       column.append(card);
 
       const cardOverlay = document.createElement('div');
-      cardOverlay.className = 'card-overlay hidden';
+      cardOverlay.className = 'card-overlay card-overlay--hidden';
       column.append(cardOverlay);
 
       const marker = document.createElement('div');
-      marker.className = 'card-marker hidden'
+      marker.className = 'card-marker hidden';
       column.append(marker);
 
       currentRow.append(column);
@@ -132,6 +135,22 @@ const renderDrawnCard = () => {
   const container = document.getElementById('drawn');
   container.lastChild.remove();
   container.append(card);
+};
+
+const renderOverlays = () => {
+  const tablaComponent = document.getElementById('tabla');
+  tabla.forEach((cardNo, index) => {
+    const row = Math.floor(index / 4);
+    const col = index % 4;
+    const cardOverlay = tablaComponent
+      .querySelector(`.row-${row}`)
+      .querySelector(`.col-${col}`)
+      .querySelector('.card-overlay');
+
+    const isPendingClick =
+      allDrawnCards.includes(cardNo) && !tablaStatus[index];
+    cardOverlay.className = `card-overlay${isPendingClick ? '' : ' card-overlay--hidden'}`;
+  });
 };
 
 const renderOtherPlayers = () => {

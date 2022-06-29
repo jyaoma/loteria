@@ -59,6 +59,10 @@
   animation-iteration-count: infinite;
 }
 
+.card-overlay--hidden {
+  visibility: hidden;
+}
+
 .card-marker {
   background-color: rgba(0, 255, 0, 0.8);
   height: 20px;
