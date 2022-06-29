@@ -104,9 +104,23 @@ const renderTabla = () => {
     for (let col = 0; col < 4; col++) {
       const previousCard = currentRow.querySelector(`.col-${col}`);
       if (previousCard) previousCard.remove();
+
+      const column = document.createElement('div');
+      column.className = `col col-${col}`;
+      
       const card = getCard(tabla[row * 4 + col]);
       card.className = `col col-${col}`;
-      currentRow.append(card);
+      column.append(card);
+
+      const cardOverlay = document.createElement('div');
+      cardOverlay.className = 'card-overlay hidden';
+      column.append(cardOverlay);
+
+      const marker = document.createElement('div');
+      marker.className = 'card-marker hidden'
+      column.append(marker);
+
+      currentRow.append(column);
     }
   }
 };
