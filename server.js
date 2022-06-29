@@ -63,8 +63,8 @@ clientChannel.subscribe('reset', (message) => {
 });
 
 clientChannel.subscribe('draw', (message) => {
-  const playerId = JSON.parse(message.data);
-  if (playerId === host) {
+  const guid = message.data;
+  if (guid === host) {
     console.log('Drawing next card');
     let currentCard = null;
     do {

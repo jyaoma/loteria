@@ -31,6 +31,9 @@ serverChannel.subscribe('pong', (message) => {
   const joinButton = document.getElementById('join-button');
   joinButton.addEventListener('click', joinGame);
   joinButton.disabled = false;
+
+  // delete this
+  signInImmediatelyAsHost(numPlayers);
 });
 
 serverChannel.subscribe('getTabla', (message) => {
@@ -90,7 +93,7 @@ const joinGame = (e) => {
   clientChannel.publish('playerJoin', JSON.stringify(payload));
 };
 
-const drawCard = () => clientChannel.publish('draw', playerId.toString());
+const drawCard = () => clientChannel.publish('draw', myGuid);
 
 // Game logic
 
@@ -123,12 +126,20 @@ const renderOtherPlayers = () => {
   grid.id = 'opponents-grid';
 
   const guids = Object.keys(playerTablas).sort();
-  guids.forEach(guid => {
-    const {
-      playerName,
-      tabla
-    } = playerTablas[guid];
-  })
+  guids.forEach((guid) => {
+    const { playerName, tabla } = playerTablas[guid];
+  });
 
   document.getElementById('opponents').append(grid);
-}
+};
+
+// Dev helpers
+const signInImmediatelyAsHost = (numPlayers) => {
+  if (numPlayers === 0) {
+    const payload = {
+      playerName: 'Jeremy',
+      guid: myGuid,
+    };
+    clientChannel.publish('playerJoin', JSON.stringify(payload));
+  }
+};
