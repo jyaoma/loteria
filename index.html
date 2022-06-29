@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="./css/controls.css" />
     <link rel="stylesheet" href="./css/lightbox.css" />
   </head>
-  <body onload="pingServer(); cool(); beans()">
+  <body onload="pingServer(); renderTabla(); renderDrawnCard()">
     <div id="play-area">
       <div id="drawn">
         <p>Last drawn card:</p>
@@ -41,15 +41,9 @@
         <div>Other players</div>
       </div>
     </div>
-    <div id="controls">
+    <div id="controls" class="hidden">
       <div class="control-group">
         <div>Host Controls</div>
-        <input
-          id="start-stop-button"
-          type="button"
-          class="control button"
-          value="Start game"
-        />
         <input
           id="draw-button"
           type="button"
@@ -68,7 +62,7 @@
           <br />
           <input type="submit" id="join-button" value="Join" disabled />
           <br />
-          <div id="start-player-count"></div>
+          <div id="start-player-count">Connecting to server...</div>
         </form>
       </div>
     </div>

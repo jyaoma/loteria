@@ -8,8 +8,7 @@ const clientChannel = ably.channels.get('client');
 
 const players = [];
 const drawn = [];
-let host = true;
-let isStarted = false;
+let host;
 
 clientChannel.subscribe('ping', () => {
   const payload = {
@@ -20,7 +19,9 @@ clientChannel.subscribe('ping', () => {
   serverChannel.publish('pong', JSON.stringify(payload));
 });
 
-clientChannel.subscribe('playerJoin', (playerName) => {
+clientChannel.subscribe('playerJoin', (message) => {
+  const { playerName, guid } = JSON.parse(message.data);
+  const playerId = players.length;
   players.push({
     id: players.length,
     name: playerName,
@@ -36,41 +37,44 @@ clientChannel.subscribe('playerJoin', (playerName) => {
     tabla[tabla.length] = genCard;
   }
 
-  // send tabla with playerId, who the host is
-  serverChannel(
-    'getTabla',
-    JSON.stringify({
-      playerId,
-      isHost: !!host,
-      tabla,
-    })
-  );
-});
-
-clientChannel.subscribe('host', (playerId) => {
-  if (host === null) host = playerId;
-});
-
-clientChannel.subscribe('start', (playerId) => {
-  if (playerId === host) {
-    isStarted = true;
+  let isHost = false;
+  if (!host && host !== 0) {
+    host = playerId;
+    isHost = true;
   }
+
+  const payload = {
+    playerId,
+    isHost,
+    tabla,
+    guid,
+  };
+  // send tabla with playerId, who the host is
+  serverChannel.publish('getTabla', JSON.stringify(payload));
 });
 
-clientChannel.subscribe('reset', (playerId) => {
+clientChannel.subscribe('reset', (message) => {
+  const playerId = JSON.parse(message.data);
   if (playerId === host) {
     isStarted = false;
     drawn = [];
   }
 });
 
-clientChannel.subscribe('draw', (playerId) => {
+clientChannel.subscribe('draw', (message) => {
+  const playerId = JSON.parse(message.data);
   if (playerId === host) {
+    console.log('Drawing next card');
     let currentCard = null;
     do {
-      currentCard = Math.floor(Math.random() * 54);
+      currentCard = Math.ceil(Math.random() * 54);
     } while (drawn.includes(currentCard));
+    drawn.push(currentCard);
 
-    serverChannel.publish('draw', currentCard);
+    const payload = {
+      currentCard,
+      drawn,
+    };
+    serverChannel.publish('draw', JSON.stringify(payload));
   }
 });
