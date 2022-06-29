@@ -13,6 +13,7 @@ let tabla = emptyTabla;
 let playerId = 0;
 
 let drawnCard = 0;
+let allDrawnCards = [];
 
 const myGuid = `${new Date().getTime()}-${Math.floor(Math.random() * 9999)}`;
 

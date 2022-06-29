@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --inspect server.js"
+    "start": "nodemon server.js",
+    "dev": "nodemon --inspect server.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,8 @@
   "homepage": "https://github.com/jyaoma/loteria#readme",
   "dependencies": {
     "ably": "^1.2.25"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.18"
   }
 }
