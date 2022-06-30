@@ -12,6 +12,7 @@ const emptyTabla = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let tabla = emptyTabla;
 let tablaStatus = Array(16).fill(false);
 let playerId = 0;
+let myName = '';
 
 let drawnCard = 0;
 let allDrawnCards = [];
@@ -32,9 +33,6 @@ serverChannel.subscribe('pong', (message) => {
   const joinButton = document.getElementById('join-button');
   joinButton.addEventListener('click', joinGame);
   joinButton.disabled = false;
-
-  // delete this
-  signInImmediatelyAsHost(numPlayers);
 });
 
 serverChannel.subscribe('getTabla', (message) => {
@@ -91,15 +89,32 @@ clientChannel.subscribe('loteria', (message) => {
   }
 });
 
+clientChannel.subscribe('update', (message) => {
+  const {
+    guid,
+    tablaStatus: newTablaStatus,
+    playerName,
+  } = JSON.parse(message.data);
+  console.log(JSON.parse(message.data));
+
+  if (guid !== myGuid) {
+    if (!playerTablas[guid]) {
+      playerTablas[guid] = { name: playerName };
+    }
+    playerTablas[guid].tabla = newTablaStatus;
+  }
+  refreshOtherPlayers();
+});
+
 // User actions
 const pingServer = () => clientChannel.publish('ping', '');
 
 const joinGame = (e) => {
   e.preventDefault();
 
-  const playerName = document.getElementById('name-field').value;
+  myName = document.getElementById('name-field').value;
   const payload = {
-    playerName,
+    playerName: myName,
     guid: myGuid,
   };
   clientChannel.publish('playerJoin', JSON.stringify(payload));
@@ -108,6 +123,16 @@ const joinGame = (e) => {
 const drawCard = () => clientChannel.publish('draw', myGuid);
 
 const loteria = () => clientChannel.publish('loteria', myGuid);
+
+const sendUpdate = () => {
+  const payload = {
+    guid: myGuid,
+    playerName: myName,
+    tablaStatus,
+  };
+
+  clientChannel.publish('update', JSON.stringify(payload));
+};
 
 // Game logic
 
@@ -141,14 +166,13 @@ const renderTabla = () => {
         }
         const newStatus = !tablaStatus[row * 4 + col];
         tablaStatus[row * 4 + col] = newStatus;
-        marker.className = `card-marker${
-          newStatus ? '' : ' hidden'
-        }`;
+        marker.className = `card-marker${newStatus ? '' : ' hidden'}`;
         cardOverlay.className = `card-overlay${
           newStatus && allDrawnCards.includes(tabla[row * 4 + col])
             ? ' card-overlay--hidden'
             : ''
         }`;
+        sendUpdate();
         checkForLoteria();
       });
 
@@ -232,13 +256,50 @@ const checkForLoteria = () => {
   document.getElementById('win-button').disabled = !winFound;
 };
 
-// Dev helpers
-const signInImmediatelyAsHost = (numPlayers) => {
-  if (numPlayers === 0) {
-    const payload = {
-      playerName: 'Jeremy',
-      guid: myGuid,
-    };
-    clientChannel.publish('playerJoin', JSON.stringify(payload));
-  }
+const refreshOtherPlayers = () => {
+  const tablas = Object.values(playerTablas);
+  const sortedTablas = tablas.sort(
+    (tabla1, tabla2) =>
+      tabla1.tabla.filter((val) => !!val).length >
+      tabla2.tabla.filter((val) => !!val).length
+  );
+
+  document.getElementById('opponents-grid').remove();
+  const opponentsGrid = document.createElement('div');
+  opponentsGrid.id = 'opponents-grid';
+
+  sortedTablas.forEach(({ name, tabla }) => {
+    const playerTable = document.createElement('table');
+    const playerThead = document.createElement('thead');
+
+    const playerTh = document.createElement('th');
+    playerTh.colSpan = 4;
+    playerTh.textContent = name;
+    playerThead.append(playerTh);
+
+    playerTable.append(playerThead);
+
+    const playerTbody = document.createElement('tbody');
+
+    for (let row = 0; row < 4; row++) {
+      const playerTr = document.createElement('tr');
+      for (let col = 0; col < 4; col++) {
+        const playerTd = document.createElement('td');
+
+        if (tabla[row * 4 + col]) {
+          const markerDiv = document.createElement('div');
+          playerTd.append(markerDiv);
+        }
+
+        playerTr.append(playerTd);
+      }
+      playerTbody.append(playerTr);
+    }
+
+    playerTable.append(playerTbody);
+
+    opponentsGrid.append(playerTable);
+  });
+
+  document.getElementById('opponents').append(opponentsGrid);
 };

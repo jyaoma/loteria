@@ -1,0 +1,23 @@
+table {
+  display: inline;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+td {
+  border: 1px solid black;
+  width: 15px;
+  height: 24px;
+}
+
+td div {
+  background-color: green;
+  width: 10px;
+  height: 10px;
+  margin-left: 2.5px;
+  border-radius: 10px;
+}
+
+#opponents-title {
+  text-align: center;
+}
