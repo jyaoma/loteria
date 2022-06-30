@@ -82,6 +82,15 @@ serverChannel.subscribe('draw', (message) => {
   renderOverlays();
 });
 
+clientChannel.subscribe('loteria', (message) => {
+  const winnerGuid = message.data;
+  if (winnerGuid !== myGuid) {
+    alert('Someone got Loteria!');
+  } else {
+    alert('You win!');
+  }
+});
+
 // User actions
 const pingServer = () => clientChannel.publish('ping', '');
 
@@ -97,6 +106,8 @@ const joinGame = (e) => {
 };
 
 const drawCard = () => clientChannel.publish('draw', myGuid);
+
+const loteria = () => clientChannel.publish('loteria', myGuid);
 
 // Game logic
 
