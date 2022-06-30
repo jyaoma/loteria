@@ -123,6 +123,24 @@ const renderTabla = () => {
       marker.className = 'card-marker hidden';
       column.append(marker);
 
+      column.addEventListener('click', () => {
+        if (!allDrawnCards.includes(tabla[row * 4 + col])) {
+          alert("This card hasn't been drawn yet!");
+          return;
+        }
+        const newStatus = !tablaStatus[row * 4 + col];
+        tablaStatus[row * 4 + col] = newStatus;
+        marker.className = `card-marker${
+          newStatus ? '' : ' hidden'
+        }`;
+        cardOverlay.className = `card-overlay${
+          newStatus && allDrawnCards.includes(tabla[row * 4 + col])
+            ? ' card-overlay--hidden'
+            : ''
+        }`;
+        checkForLoteria();
+      });
+
       currentRow.append(column);
     }
   }
@@ -149,7 +167,9 @@ const renderOverlays = () => {
 
     const isPendingClick =
       allDrawnCards.includes(cardNo) && !tablaStatus[index];
-    cardOverlay.className = `card-overlay${isPendingClick ? '' : ' card-overlay--hidden'}`;
+    cardOverlay.className = `card-overlay${
+      isPendingClick ? '' : ' card-overlay--hidden'
+    }`;
   });
 };
 
@@ -164,6 +184,41 @@ const renderOtherPlayers = () => {
   });
 
   document.getElementById('opponents').append(grid);
+};
+
+const checkIfAllChecked = (...indexes) => {
+  let isComplete = true;
+  indexes.forEach((index) => {
+    if (!tablaStatus[index]) isComplete = false;
+  });
+  return isComplete;
+};
+
+const checkForLoteria = () => {
+  const winFound =
+    // rows
+    checkIfAllChecked(0, 1, 2, 3) ||
+    checkIfAllChecked(4, 5, 6, 7) ||
+    checkIfAllChecked(8, 9, 10, 11) ||
+    checkIfAllChecked(12, 13, 14, 15) ||
+    // cols
+    checkIfAllChecked(0, 4, 8, 12) ||
+    checkIfAllChecked(1, 5, 9, 13) ||
+    checkIfAllChecked(2, 6, 10, 14) ||
+    checkIfAllChecked(3, 7, 11, 15) ||
+    // squares
+    checkIfAllChecked(0, 1, 4, 5) ||
+    checkIfAllChecked(1, 2, 5, 6) ||
+    checkIfAllChecked(2, 3, 6, 7) ||
+    checkIfAllChecked(4, 5, 8, 9) ||
+    checkIfAllChecked(5, 6, 9, 10) ||
+    checkIfAllChecked(6, 7, 10, 11) ||
+    checkIfAllChecked(8, 9, 12, 13) ||
+    checkIfAllChecked(9, 10, 13, 14) ||
+    checkIfAllChecked(10, 11, 14, 15) ||
+    // four corners
+    checkIfAllChecked(0, 3, 12, 15);
+  document.getElementById('win-button').disabled = !winFound;
 };
 
 // Dev helpers
