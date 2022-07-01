@@ -6,8 +6,8 @@ const ably = new Ably.Realtime(
 const serverChannel = ably.channels.get('server');
 const clientChannel = ably.channels.get('client');
 
-const players = [];
-const drawn = [];
+let players = [];
+let drawn = [];
 let host;
 
 clientChannel.subscribe('ping', () => {
@@ -78,4 +78,9 @@ clientChannel.subscribe('draw', (message) => {
     };
     serverChannel.publish('draw', JSON.stringify(payload));
   }
+});
+
+clientChannel.subscribe('loteria', (message) => {
+  players = [];
+  drawn = [];
 });
