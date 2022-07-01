@@ -4,6 +4,10 @@ table {
   margin-right: 10px;
 }
 
+th {
+  font-weight: normal;
+}
+
 td {
   border: 1px solid black;
   width: 15px;
