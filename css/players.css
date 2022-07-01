@@ -22,6 +22,10 @@ td div {
   border-radius: 10px;
 }
 
+#opponents {
+  max-width: 500px;
+}
+
 #opponents-title {
   text-align: center;
 }
