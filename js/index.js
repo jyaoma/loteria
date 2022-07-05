@@ -17,7 +17,7 @@ let myName = '';
 let drawnCard = 0;
 let allDrawnCards = [];
 
-const playerTablas = {};
+let playerTablas = {};
 
 const myGuid = `${new Date().getTime()}-${Math.floor(Math.random() * 9999)}`;
 
@@ -43,7 +43,10 @@ serverChannel.subscribe('getTabla', (message) => {
     playerName,
     isHost,
     tabla: newTabla,
+    playerTablas: otherPlayerTablas,
   } = JSON.parse(message.data);
+
+  playerTablas = otherPlayerTablas;
 
   if (guid === myGuid) {
     if (isHost) {
@@ -61,13 +64,13 @@ serverChannel.subscribe('getTabla', (message) => {
 
     tabla = newTabla;
     renderTabla();
-  } else {
-    playerTablas[guid] = {
-      name: playerName,
-      tabla: Array(16).fill(false),
-    };
-    renderOtherPlayers();
   }
+
+  playerTablas[guid] = {
+    name: playerName,
+    tabla: Array(16).fill(false),
+  };
+  refreshPlayers();
 });
 
 serverChannel.subscribe('draw', (message) => {
@@ -97,13 +100,11 @@ clientChannel.subscribe('update', (message) => {
   } = JSON.parse(message.data);
   console.log(JSON.parse(message.data));
 
-  if (guid !== myGuid) {
-    if (!playerTablas[guid]) {
-      playerTablas[guid] = { name: playerName };
-    }
-    playerTablas[guid].tabla = newTablaStatus;
+  if (!playerTablas[guid]) {
+    playerTablas[guid] = { name: playerName };
   }
-  refreshOtherPlayers();
+  playerTablas[guid].tabla = newTablaStatus;
+  refreshPlayers();
 });
 
 // User actions
@@ -208,19 +209,6 @@ const renderOverlays = () => {
   });
 };
 
-const renderOtherPlayers = () => {
-  document.getElementById('opponents-grid').remove();
-  const grid = document.createElement('div');
-  grid.id = 'opponents-grid';
-
-  const guids = Object.keys(playerTablas).sort();
-  guids.forEach((guid) => {
-    const { playerName, tabla } = playerTablas[guid];
-  });
-
-  document.getElementById('opponents').append(grid);
-};
-
 const checkIfAllChecked = (...indexes) => {
   let isComplete = true;
   indexes.forEach((index) => {
@@ -256,7 +244,7 @@ const checkForLoteria = () => {
   document.getElementById('win-button').disabled = !winFound;
 };
 
-const refreshOtherPlayers = () => {
+const refreshPlayers = () => {
   const tablas = Object.values(playerTablas);
   const sortedTablas = tablas.sort(
     (tabla1, tabla2) =>

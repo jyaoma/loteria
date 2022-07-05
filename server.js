@@ -6,6 +6,7 @@ const ably = new Ably.Realtime(
 const serverChannel = ably.channels.get('server');
 const clientChannel = ably.channels.get('client');
 
+let playerTablas = {};
 let players = [];
 let drawn = [];
 let host;
@@ -49,6 +50,7 @@ clientChannel.subscribe('playerJoin', (message) => {
     isHost,
     tabla,
     guid,
+    playerTablas,
   };
   // send tabla with playerId, who the host is
   serverChannel.publish('getTabla', JSON.stringify(payload));
@@ -57,8 +59,10 @@ clientChannel.subscribe('playerJoin', (message) => {
 clientChannel.subscribe('reset', (message) => {
   const playerId = JSON.parse(message.data);
   if (playerId === host) {
-    isStarted = false;
+    players = [];
     drawn = [];
+    host = null;
+    playerTablas = {};
   }
 });
 
@@ -80,7 +84,21 @@ clientChannel.subscribe('draw', (message) => {
   }
 });
 
-clientChannel.subscribe('loteria', (message) => {
-  players = [];
+clientChannel.subscribe('newgame', (message) => {
   drawn = [];
+  playerTablas = {};
+});
+
+clientChannel.subscribe('update', (message) => {
+  const {
+    guid,
+    tablaStatus: newTablaStatus,
+    playerName,
+  } = JSON.parse(message.data);
+  console.log(JSON.parse(message.data));
+
+  if (!playerTablas[guid]) {
+    playerTablas[guid] = { name: playerName };
+  }
+  playerTablas[guid].tabla = newTablaStatus;
 });
