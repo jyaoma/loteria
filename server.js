@@ -44,6 +44,8 @@ clientChannel.subscribe('playerJoin', (message) => {
     isHost = true;
   }
 
+  playerTablas[guid] = { name: playerName, tabla: new Array(16).fill(false) };
+
   const payload = {
     playerId,
     playerName,
@@ -56,14 +58,14 @@ clientChannel.subscribe('playerJoin', (message) => {
   serverChannel.publish('getTabla', JSON.stringify(payload));
 });
 
-clientChannel.subscribe('reset', (message) => {
-  const playerId = JSON.parse(message.data);
-  if (playerId === host) {
-    players = [];
-    drawn = [];
-    host = null;
-    playerTablas = {};
-  }
+clientChannel.subscribe('reset', (_) => {
+  // const playerId = JSON.parse(message.data);
+  // if (playerId === host) {
+  players = [];
+  drawn = [];
+  host = null;
+  playerTablas = {};
+  // }
 });
 
 clientChannel.subscribe('draw', (message) => {
@@ -84,9 +86,37 @@ clientChannel.subscribe('draw', (message) => {
   }
 });
 
-clientChannel.subscribe('newgame', (message) => {
+clientChannel.subscribe('newgame', (_) => {
+  players = [];
   drawn = [];
-  playerTablas = {};
+  const guids = Object.keys(playerTablas);
+  guids.forEach((currentGuid) => {
+    const tabla = [];
+    // generate tabla
+    for (let i = 0; i < 16; i++) {
+      let genCard = null;
+      do {
+        genCard = Math.ceil(Math.random() * 54);
+      } while (tabla.includes(genCard));
+      tabla[tabla.length] = genCard;
+    }
+    playerTablas[currentGuid].tabla = new Array(16).fill(false);
+    players.push(currentGuid);
+
+    const isCurrentPersonHost = host === currentGuid;
+    const payload = {
+      playerId: players.length - 1,
+      playerName: playerTablas[currentGuid].name,
+      isHost: isCurrentPersonHost,
+      tabla,
+      guid: currentGuid,
+      playerTablas,
+    };
+
+    console.log(payload);
+
+    serverChannel.publish('getTabla', JSON.stringify(payload));
+  });
 });
 
 clientChannel.subscribe('update', (message) => {

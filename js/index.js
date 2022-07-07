@@ -107,6 +107,34 @@ clientChannel.subscribe('update', (message) => {
   refreshPlayers();
 });
 
+clientChannel.subscribe('newgame', (_) => {
+  const guids = Object.keys(playerTablas);
+  guids.forEach(
+    (currentGuid) =>
+      (playerTablas[currentGuid].tabla = new Array(16).fill(false))
+  );
+  allDrawnCards = [];
+  drawnCard = 0;
+  tablaStatus = new Array(16).fill(false);
+  renderDrawnCard();
+  refreshPlayers();
+  checkForLoteria();
+});
+
+clientChannel.subscribe('reset', (_) => {
+  playerTablas = {};
+  allDrawnCards = [];
+  drawnCard = 0;
+  tabla = emptyTabla;
+  tablaStatus = new Array(16).fill(false);
+  renderTabla();
+  renderDrawnCard();
+  refreshPlayers();
+  pingServer();
+  checkForLoteria();
+  document.getElementById('lightbox').className = '';
+});
+
 // User actions
 const pingServer = () => clientChannel.publish('ping', '');
 
@@ -134,6 +162,10 @@ const sendUpdate = () => {
 
   clientChannel.publish('update', JSON.stringify(payload));
 };
+
+const newGame = () => clientChannel.publish('newgame', '');
+
+const reset = () => clientChannel.publish('reset', '');
 
 // Game logic
 
