@@ -4,7 +4,7 @@ Lotería (Spanish for "lottery") is a game of chance. Each player gets a "tabla"
       
 During play, the dealer draws cards from a deck one-by-one and the card is announced to everyone. If your tabla contains the card that was announced, click on it to mark it.
       
-The goal of the game is to mark cards in one of the below patterns. Once you do, click on the "Lotería!" button to win!
+The goal of the game is to mark cards in certain patterns. Once you do, click on the "Lotería!" button to win!
 
 ---
 
